@@ -11,6 +11,9 @@ class BaseConfig:
     APP_PORT = env('APP_PORT')
     APP_HOST = env('APP_HOST')
 
+    EMAIL_ADDRESS = env('EMAIL_ADDRESS')
+    EMAIL_PASSWORD = env('EMAIL_PASSWORD')
+
     def __getitem__(self, key: str) -> str:
         return getattr(self, key)
     

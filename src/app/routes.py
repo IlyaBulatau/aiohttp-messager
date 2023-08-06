@@ -7,4 +7,7 @@ def setup_router(app: web.Application, path_to_static) -> None:
     app.router.add_get('/', index, name='index')
     app.router.add_get('/sock', socket_handler)
     app.router.add_get('/{name}', index)
+
     app.router.add_static(prefix='/static', path=path_to_static, name='static')
+
+    
