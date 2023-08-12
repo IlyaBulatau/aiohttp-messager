@@ -1,10 +1,12 @@
 from src.app.routes import setup_router
 from src.config.setup import setup_config
 from src.logger.setup import setup_loggger
+from src.database.connect import connect_with_database, close_connect_with_database
 
 from aiohttp import web
 import aiohttp_jinja2
 import jinja2
+
 import pathlib
 
 app = web.Application()
@@ -19,11 +21,13 @@ def setup_app(app: web.Application) -> None:
     setup_config(app)
     setup_templates(app)
     setup_router(app, path_to_static=path_to_static)
+    setup_loggger(app, app['config']['EMAIL_ADDRESS'], app['config']['EMAIL_PASSWORD'])
 
+    app.on_startup.append(connect_with_database)
+    app.on_shutdown.append(close_connect_with_database)
 
 if __name__ == "__main__":
     setup_app(app)
-    log = setup_loggger(app['config']['EMAIL_ADDRESS'], app['config']['EMAIL_PASSWORD'])
-    log.warning('START MESSEGER APP')
+    app['log'].warning('START MESSEGER APP')
     web.run_app(app, port=app['config']['APP_PORT'], host=app['config']['APP_HOST'])
 

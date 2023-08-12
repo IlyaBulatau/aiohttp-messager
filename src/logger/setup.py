@@ -1,8 +1,8 @@
 import logging
-from logging.handlers import SMTPHandler
-from src.logger.handlers import create_smtp_handler, HANDLERS
 
-def setup_loggger(email: str, passwod: str) -> logging.Logger:
+from src.logger.handlers import HANDLERS
+
+def setup_loggger(app, email: str, passwod: str) -> None:
     """
     Create logger object and add all handlers from HANDLERS list
 
@@ -15,4 +15,4 @@ def setup_loggger(email: str, passwod: str) -> logging.Logger:
         logger.addHandler(handler)
 
 
-    return logger
+    app['log'] = logger
