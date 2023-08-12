@@ -2,6 +2,7 @@ from src.app.routes import setup_router
 from src.config.setup import setup_config
 from src.logger.setup import setup_loggger
 from src.database.connect import connect_with_database, close_connect_with_database
+from src.database.models import create_tablse
 
 from aiohttp import web
 import aiohttp_jinja2
@@ -24,6 +25,7 @@ def setup_app(app: web.Application) -> None:
     setup_loggger(app, app['config']['EMAIL_ADDRESS'], app['config']['EMAIL_PASSWORD'])
 
     app.on_startup.append(connect_with_database)
+    app.on_startup.append(create_tablse)
     app.on_shutdown.append(close_connect_with_database)
 
 if __name__ == "__main__":

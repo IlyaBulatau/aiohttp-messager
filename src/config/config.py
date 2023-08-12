@@ -14,11 +14,6 @@ class BaseConfig:
     EMAIL_ADDRESS = env('EMAIL_ADDRESS')
     EMAIL_PASSWORD = env('EMAIL_PASSWORD')
 
-    POSTGRES_LOGIN = env('POSTGRES_LOGIN')
-    POSTGRES_PASSWORD = env('POSTGRES_PASSWORD')
-    POSTGRES_HOST = env('POSTGRES_HOST')
-    POSTGRES_NAME = env('POSTGRES_NAME')
-
     def __getitem__(self, key: str) -> str:
         return getattr(self, key)
     
@@ -29,8 +24,13 @@ class BaseConfig:
         raise AttributeError
 
 
-class DevelopmentConfig(BaseConfig):
-    ...
+class DevelopmentConfig(BaseConfig): 
+
+    POSTGRES_LOGIN = BaseConfig.env('POSTGRES_LOGIN')
+    POSTGRES_PASSWORD = BaseConfig.env('POSTGRES_PASSWORD')
+    POSTGRES_HOST = BaseConfig.env('POSTGRES_HOST')
+    POSTGRES_NAME = BaseConfig.env('POSTGRES_NAME')
+
 
 
 class ProductConfig(BaseConfig):
