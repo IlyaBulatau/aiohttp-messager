@@ -7,7 +7,8 @@ def setup_redis(app: web.Application) -> aioredis.Redis:
     """
     Add redis storage in the app
     """
-    redis = aioredis.Redis(host=app['config']['REDIS_HOST'])
+    url = f'redis://{app["config"]["REDIS_HOST"]}'
+    redis = aioredis.from_url(url=url, decode_responses=True)
 
     app['redis'] = redis
 
@@ -17,9 +18,9 @@ class AuthPolicy(AbstractAuthorizationPolicy):
     """
     Responsible for user auth
     """
-    def permits(self, identity: int, permission: str, context=None) -> bool:
-        return super().permits(identity, permission, context)
+    async def permits(self, identity: int, permission: str, context=None) -> bool:
+        return True
     
-    def authorized_userid(self, identity: int) -> int:
-        return super().authorized_userid(identity)
+    async def authorized_userid(self, identity: int) -> int:
+        return identity
 

@@ -28,7 +28,7 @@ def setup_app(app: web.Application) -> None:
     setup_templates(app)
     setup_router(app, path_to_static=path_to_static)
     setup_redis(app)
-    setup_session(app=app, storage=RedisStorage(redis_pool=app['redis']))
+    setup_session(app=app, storage=RedisStorage(app['redis']))
     setup_security(app, identity_policy=SessionIdentityPolicy(), autz_policy=AuthPolicy())
     setup_loggger(app, app['config']['EMAIL_ADDRESS'], app['config']['EMAIL_PASSWORD'])
 
