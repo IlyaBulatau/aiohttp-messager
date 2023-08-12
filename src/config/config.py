@@ -31,6 +31,9 @@ class DevelopmentConfig(BaseConfig):
     POSTGRES_HOST = BaseConfig.env('POSTGRES_HOST')
     POSTGRES_NAME = BaseConfig.env('POSTGRES_NAME')
 
+    REDIS_HOST = BaseConfig.env('REDIS_HOST')
+    REDIS_DB = BaseConfig.env('REDIS_DB')
+
 
 
 class ProductConfig(BaseConfig):

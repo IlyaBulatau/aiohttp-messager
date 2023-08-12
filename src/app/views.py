@@ -1,10 +1,13 @@
 from aiohttp import web
 import aiohttp_jinja2
+from aiohttp_security import authorized_userid
 
 
 @aiohttp_jinja2.template('index.html')
 async def index(request: web.Request):
-    return {'title': 'title'}
+    ui = await authorized_userid(request)
+    print(ui)
+    return {'title': 'Home'}
 
 @aiohttp_jinja2.template('index.html')
 async def socket_handler(request):

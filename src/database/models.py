@@ -11,14 +11,14 @@ async def create_tablse(app: web.Application) -> None:
     query_create_users_table = \
         """
         CREATE TABLE IF NOT EXISTS users(
-            user_id INTEGER PRIMARY KEY,
+            user_id SERIAL PRIMARY KEY,
             username CHARACTER(20) NOT NULL UNIQUE
         );
         """
     query_create_messages_table = \
         """
         CREATE TABLE IF NOT EXISTS messages(
-            message_id INTEGER PRIMARY KEY,
+            message_id SERIAL PRIMARY KEY,
             body TEXT NOT NULL,
             user_id INT REFERENCES users (user_id),
             chat_id INT REFERENCES chats (chat_id)
@@ -27,7 +27,7 @@ async def create_tablse(app: web.Application) -> None:
     query_create_chats_table = \
         """
         CREATE TABLE IF NOT EXISTS chats(
-            chat_id INTEGER PRIMARY KEY,
+            chat_id SERIAL PRIMARY KEY,
             name CHARACTER(20) NOT NULl
         );
         """
@@ -35,8 +35,8 @@ async def create_tablse(app: web.Application) -> None:
     query_create_users_chats_table = \
         """
         CREATE TABLE IF NOT EXISTS users_chats(
-            user_id INTEGER REFERENCES users (user_id),
-            chat_id INTEGER REFERENCES chats (chat_id),
+            user_id SERIAL REFERENCES users (user_id),
+            chat_id SERIAL REFERENCES chats (chat_id),
             CONSTRAINT chat_user_id PRIMARY KEY (user_id, chat_id)
         );
         """
