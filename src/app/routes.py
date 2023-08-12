@@ -11,7 +11,7 @@ def setup_router(app: web.Application, path_to_static) -> None:
     app.router.add_post('/login', login)
     app.router.add_get('/auth', auth, name='auth')
     app.router.add_post('/auth', auth)
-    app.router.add_get('/logout', logout)
+    app.router.add_get('/logout', logout, name='logout')
 
     app.router.add_static(prefix='/static', path=path_to_static, name='static')
 

@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ app.router.static.url_for(filename='css/style.css') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+    <body>
+        <nav id="topnav">
+           <a id="logo" class="nav-link" href="{{ app.router.get('index').url_for() }}">Home</a>
+           {% if not is_anonymous %}
+           <a class="nav-link" href="#">{{ username }}</a>
+           <a class="nav-link" href="{{ app.router.get('logout').url_for() }}">Logout</a>
+           {% else %}
+           <a class="nav-link" href="{{ app.router.get('login').url_for() }}">SignIn</a>
+           <a class="nav-link" href="{{ app.router.get('auth').url_for() }}">SignUp</a>
+           {% endif %}
+        </nav>
+        <br><br><br>
     {% block content %}
     {% endblock %}
 </body>

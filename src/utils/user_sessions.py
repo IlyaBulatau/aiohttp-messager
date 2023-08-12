@@ -24,3 +24,4 @@ class AuthPolicy(AbstractAuthorizationPolicy):
     async def authorized_userid(self, identity: int) -> int:
         return identity
 
+
