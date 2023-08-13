@@ -8,6 +8,10 @@ from src.utils.decorators import login_verification
 
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request) -> web.Response | web.HTTPFound:
+    """
+    /login
+    Login Page
+    """
     method = request.method.upper()
 
     if method == 'GET':
@@ -28,6 +32,10 @@ async def login(request: web.Request) -> web.Response | web.HTTPFound:
         
 @aiohttp_jinja2.template('auth.html')
 async def auth(request: web.Request) -> web.Response | web.HTTPFound:
+    """
+    /auth
+    Auth Page
+    """
     method = request.method.upper()
 
     if method == 'GET':
@@ -39,11 +47,15 @@ async def auth(request: web.Request) -> web.Response | web.HTTPFound:
         
         db: Connection = request.app['db']
 
-        r = await db.executemany(command=queries.insert_user_in_users_table, args=[(username,),])
+        async with db.transaction():
+            await db.executemany(command=queries.insert_user_in_users_table, args=[(username,),])
 
         return web.HTTPFound('/login')
 
 @login_verification
 async def logout(request: web.Request):
+    """
+    /logout
+    """
     await forget(request, web.HTTPFound('/login'))
     return web.HTTPFound('/login')

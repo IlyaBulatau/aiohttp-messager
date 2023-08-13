@@ -14,4 +14,10 @@
     <br>
     <input type="submit">
 </form>
+<br>
+<br>
+<h3>Chats List</h3>
+{% for chat in chats %}
+<p><a href="{{ app.router.get('chat_room').url_for(id=chat[1]) }}">{{ chat[0] }}</a></p>
+{% endfor %}
 {% endblock %}

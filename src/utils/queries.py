@@ -18,3 +18,21 @@ get_user_in_db_by_id = \
         WHERE user_id = $1
         """
 
+insert_chat_in_chats_table = \
+        """
+        INSERT INTO
+        chats VALUES(DEFAULT, $1);
+        """
+
+get_chats_in_db = \
+        """
+        SELECT chat_id, name
+        FROM chats;
+        """
+
+get_chat_by_id = \
+        """
+        SELECT name
+        FROM chats
+        WHERE chat_id = $1;
+        """

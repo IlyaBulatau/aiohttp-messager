@@ -52,3 +52,7 @@ if __name__ == "__main__":
     web.run_app(app, port=app['config']['APP_PORT'], host=app['config']['APP_HOST'])
 
 # TODO - create chat-romms and setup websockets
+# TODO - upgrade html and css styles
+# TODO - create validation error and exeption
+# TODO - validat data from html forms
+# TODO - take out bussines login from handlers
