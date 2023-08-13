@@ -1,8 +1,8 @@
 import functools
-from typing import Coroutine, Callable
+from typing import Callable, Coroutine
 
 from aiohttp import web
-from aiohttp_security import is_anonymous, authorized_userid
+from aiohttp_security import authorized_userid, is_anonymous
 
 
 def login_verification(coro: Coroutine) -> Callable:
@@ -12,17 +12,20 @@ def login_verification(coro: Coroutine) -> Callable:
 
     @functools.wraps(coro)
     async def wrapper(*args, **kwargs) -> web.Response:
-        request: web.Request = args[0] 
+        request: web.Request = args[0]
 
         if await is_anonymous(request):
-            return web.HTTPFound('/login')
-        
+            return web.HTTPFound("/login")
+
         return await coro(*args, **kwargs)
-    
+
     return wrapper
 
+
 @web.middleware
-async def add_user_id_to_request_middleware(request: web.Request, handler: Callable) -> web.Response:
+async def add_user_id_to_request_middleware(
+    request: web.Request, handler: Callable
+) -> web.Response:
     """
     Add user_id to request objects
     """

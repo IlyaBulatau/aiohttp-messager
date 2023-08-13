@@ -2,6 +2,7 @@ import logging
 
 from src.logger.handlers import HANDLERS
 
+
 def setup_loggger(app, email: str, passwod: str) -> None:
     """
     Create logger object and add all handlers from HANDLERS list
@@ -14,5 +15,4 @@ def setup_loggger(app, email: str, passwod: str) -> None:
     for handler in HANDLERS:
         logger.addHandler(handler)
 
-
-    app['log'] = logger
+    app["log"] = logger
