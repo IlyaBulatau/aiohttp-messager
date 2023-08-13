@@ -22,5 +22,7 @@
     {% block content %}
     {% endblock %}
 </body>
+{% block js %}
 <script src="{{ app.router.static.url_for(filename='js/main.js') }}"></script>
+{% endblock %}
 </html>

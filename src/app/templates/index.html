@@ -7,5 +7,11 @@
 {% block content %}
 <h1>{{ title }}</h1>
 <br>
-
+<h2>Create Chat</h2>
+<form method="post">
+    <label for="chat_name">Chat name</label>
+    <input type="text" name="chat_name">
+    <br>
+    <input type="submit">
+</form>
 {% endblock %}

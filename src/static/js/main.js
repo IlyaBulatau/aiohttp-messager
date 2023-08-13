@@ -1,62 +1,75 @@
 try{
-    var sock = new WebSocket('ws://' + window.location.host + '/ws');
+    var sock = new WebSocket('ws://' + window.location.host + WS_URL);
 }
 catch(err){
-    var sock = new WebSocket('wss://' + window.location.host + '/ws');
+    var sock = new WebSocket('wss://' + window.location.host + WS_URL);
 }
 
-// show message in div#subscribe
+var service_msg = '<div class="service-msg">{text}</div>', msg_template = `
+<div class="media-body">
+    <div class="media">
+        <div class="media-body">
+            <em>@{username}</em> <small class="text-muted">| {time}</small>
+            <br>{text}
+        </div>
+    </div>
+</div>`, $chatArea = $('.current-chat-area'), $messagesContainer = $('#messages');
+
+function dateFormat(date) {
+    return [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-') + ' ' +  [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
+}
+
 function showMessage(message) {
-    var messageElem = $('#subscribe'),
-        height = 0,
-        date = new Date();
-        options = {hour12: false};
-    messageElem.append($('<p>').html('[' + date.toLocaleTimeString('en-US', options) + '] ' + message + 'n'));
-    messageElem.find('p').each(function(i, value){
-        height += parseInt($(this).height());
+    /* Append message to chat area */
+    console.log(message);
+    var data = jQuery.parseJSON(message.data);
+    var date = new Date(data.created_at);
+    if (data.cmd) {
+        if (data.cmd === 'empty') {
+            $messagesContainer.empty();
+            return;
+        }
+    } else if (data.user) {
+        var msg = msg_template
+            .replace('{username}', data.user)
+            .replace('{text}', data.text)
+            .replace('{time}', dateFormat(date));
+
+    } else {
+        var msg = service_msg.replace('{text}', data.text.split('\n').join('<br />'));
+    }
+    $messagesContainer.append('<li class="media">' + msg + '</li>');
+    $chatArea.scrollTop($messagesContainer.height());
+}
+
+$(document).ready(function(){
+    $chatArea.scrollTop($messagesContainer.height());
+
+    $('#send').on('submit', function (event) {
+        event.preventDefault();
+        var $message = $(event.target).find('input[name="text"]');
+        sock.send($message.val());
+        $message.val('').focus();
     });
 
-    messageElem.animate({scrollTop: height});
-}
+    sock.onopen = function (event) {
+        console.log(event);
+        console.log('Connection to server started');
+    };
 
-function sendMessage(){
-    var msg = $('#message');
-    sock.send(msg.val());
-    msg.val('').focus();
-}
+    sock.onclose = function (event) {
+        console.log(event);
+        if(event.wasClean){
+            console.log('Clean connection end');
+        } else {
+            console.log('Connection broken');
+        }
+        window.location.assign('/');
+    };
 
-sock.onopen = function(){
-    showMessage('Connection to server started')
-}
+    sock.onerror = function (error) {
+        console.log(error);
+    };
 
-// send message from form
-$('#submit').click(function() {
-    sendMessage();
+    sock.onmessage = showMessage;
 });
-
-$('#message').keyup(function(e){
-    if(e.keyCode == 13){
-        sendMessage();
-    }
-});
-
-// income message handler
-sock.onmessage = function(event) {
-  showMessage(event.data);
-};
-
-$('#signout').click(function(){
-    window.location.href = "signout"
-});
-
-sock.onclose = function(event){
-    if(event.wasClean){
-        showMessage('Clean connection end')
-    }else{
-        showMessage('Connection broken')
-    }
-};
-
-sock.onerror = function(error){
-    showMessage(error);
-}

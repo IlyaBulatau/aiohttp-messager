@@ -5,6 +5,7 @@ from src.database.connect import connect_with_database, close_connect_with_datab
 from src.database.models import create_tablse
 from src.utils.user_sessions import setup_redis, AuthPolicy
 from src.utils.context_processors import context_user_is_anonymous_processor, context_get_username_processor
+from src.utils.decorators import add_user_id_to_request_middleware
 
 from aiohttp import web
 import aiohttp_jinja2
@@ -18,7 +19,7 @@ import pathlib
 
 app = web.Application()
 
-def setup_templates(app: web.Application) -> None:
+def setup_templates(app: web.Application) -> None:  
     path_to_templates = pathlib.Path().absolute().joinpath('src').joinpath('app').joinpath('templates') 
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(searchpath=path_to_templates), 
                          context_processors=[context_user_is_anonymous_processor,
@@ -37,6 +38,10 @@ def setup_app(app: web.Application) -> None:
     setup_loggger(app, app['config']['EMAIL_ADDRESS'], app['config']['EMAIL_PASSWORD'])
     setup_templates(app)
 
+    app['websockets'] = []
+
+    app.middlewares.append(add_user_id_to_request_middleware)
+
     app.on_startup.append(connect_with_database)
     app.on_startup.append(create_tablse)
     app.on_shutdown.append(close_connect_with_database)
@@ -46,3 +51,4 @@ if __name__ == "__main__":
     app['log'].warning('START MESSEGER APP')
     web.run_app(app, port=app['config']['APP_PORT'], host=app['config']['APP_HOST'])
 
+# TODO - create chat-romms and setup websockets

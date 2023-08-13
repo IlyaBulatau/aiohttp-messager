@@ -11,8 +11,11 @@ async def context_user_is_anonymous_processor(request: web.Request) -> dict:
     result_bool: bool =  await is_anonymous(request)
     return {'is_anonymous': result_bool}
 
-async def context_get_username_processor(request: web.Request) -> dict:
+async def context_get_username_processor(request: web.Request) -> dict | web.Request:
     user_id: str = await authorized_userid(request)
+
+    if not user_id:
+        return request
 
     db: Connection = request.app['db']
 

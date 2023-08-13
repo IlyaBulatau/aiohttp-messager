@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+{{ title }}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">var WS_URL = "{{ app.router.get('ws').url_for() }}";</script>
+<script src="{{ app.router.static.url_for(filename='js/main.js') }}"></script>
+{% endblock %}
